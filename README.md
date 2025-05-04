@@ -85,16 +85,17 @@ From here, we can attempt to reset the password for this user. However, we must 
 After sending the request to Burp's Intruder, I mark the 'recovery_code' param, choose the 'number' payload type, and change the minimum digits to '4' (because recovery codes have 4 digits).
 ![image](https://github.com/user-attachments/assets/0122b34e-0941-4309-8b81-c60132e6a21c)
 
-After about 5 failed attempts, the webserver responsed that we have exceeded the rate-limit. To bypass this, we can manipulate the [X-Forwarded-For header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Forwarded-For), which is for identifying the originating IP address of a client connecting to a web server. 
+After about 5 failed attempts, the webserver responsed that we have exceeded the rate-limit. To test if this is an IP-based restriction or a session-based one, I'll try to manipulate the [X-Forwarded-For header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Forwarded-For), which is for identifying the originating IP address of a client connecting to a web server. 
+
 ![image](https://github.com/user-attachments/assets/e4b73681-d900-4451-8ce6-ffe8d0e82671)
 
-To generate the wordlist, I'll use the seq command with padding options.
+To generate the wordlist for token, I'll use the seq command with padding options.
 
 ```
 seq -w 9999 > code.txt
 ```
 
-ffuf is used again to brute-force the 2FA token. Here I filtered for empty responses and responses contains "Invalid" keyword, as shown when an invalid token is submitted.
+ffuf is used again to brute-force the 2FA token. Here I filtered for empty responses and responses contains "Invalid" keyword, as shown when an invalid token is submitted. I also use the same wordlist to fuzz the value for the X-Forwarded-For header. 
 
 ![image](https://github.com/user-attachments/assets/91a4b2e6-9614-4577-99fe-842070abbc4d)
 
@@ -133,6 +134,7 @@ ________________________________________________
 
 <i> Note: The cookie is different from the one captured with Burp because when the rate limit expired, I was given a new session.</i>
 
+The attack went smoothly, proving the rate-limit is IP-based. 
 Once the correct token is submitted, I resetted the password and successfully logged in.
 
 ![image](https://github.com/user-attachments/assets/d9267f3d-1cf0-4056-a99b-5fbde3944a47)
