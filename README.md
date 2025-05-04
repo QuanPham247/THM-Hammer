@@ -88,8 +88,6 @@ After sending the request to Burp's Intruder, I mark the 'recovery_code' param, 
 After about 5 failed attempts, the webserver responsed that we have exceeded the rate-limit. To bypass this, we can manipulate the [X-Forwarded-For header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Forwarded-For), which is for identifying the originating IP address of a client connecting to a web server. 
 ![image](https://github.com/user-attachments/assets/e4b73681-d900-4451-8ce6-ffe8d0e82671)
 
-```
-
 To generate the wordlist, I'll use the seq command with padding options.
 
 ```
