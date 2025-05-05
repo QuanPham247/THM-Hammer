@@ -163,6 +163,7 @@ To achieve a persistent session, I'll change cookie header 'persistentSession' t
 Unfortunately, I get logged out after some time. I've tried other values but couldn't the session so I'll skip that for now. 
 
 <h3><b> Command execution authorization </b></h3>
+
 ![image](https://github.com/user-attachments/assets/febfe145-6df5-4dc6-b218-dbc1fcc08f0b)
 
 The function (1)sends a POST request to <b>execute_command.php</b>, with (2)<b>Command</b> parameter contains the command to be executed in JSON format, and (3)an authorization header <b>'Authorization': 'Bearer ' + jwtToken</b>
