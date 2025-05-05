@@ -85,7 +85,7 @@ From here, we can attempt to reset the password for this user. However, we must 
 After sending the request to Burp's Intruder, I mark the 'recovery_code' param, choose the 'number' payload type, and change the minimum digits to '4' (because recovery codes have 4 digits).
 ![image](https://github.com/user-attachments/assets/0122b34e-0941-4309-8b81-c60132e6a21c)
 
-After about 5 failed attempts, the webserver responsed that we have exceeded the rate-limit. To test if this is an IP-based restriction or a session-based one, I'll try to manipulate the [X-Forwarded-For header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Forwarded-For), which is for identifying the originating IP address of a client connecting to a web server. 
+After about a few failed attempts, the webserver responsed that we have exceeded the rate-limit. To test if this is an IP-based restriction or a session-based one, I'll try to manipulate the [X-Forwarded-For header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Forwarded-For), which is for identifying the originating IP address of a client connecting to a web server. 
 
 ![image](https://github.com/user-attachments/assets/e4b73681-d900-4451-8ce6-ffe8d0e82671)
 
@@ -138,6 +138,83 @@ The attack went smoothly, proving the rate-limit is IP-based.
 Once the correct token is submitted, I resetted the password and successfully logged in.
 
 ![image](https://github.com/user-attachments/assets/d9267f3d-1cf0-4056-a99b-5fbde3944a47)
+
+<h2>${\color{Blue}Enumeration of dashboard.php}$</h2>
+
+<b>Command execution</b>
+The page allows me to execute OS commands, which could be used for RCE. However, only 'ls' command is allowed, but not other OS comamnds and I was always logged out after an interval. I found a keyfile, but not sure what it does exactly.
+
+![image](https://github.com/user-attachments/assets/84111038-4d84-4d21-afea-c75e2030b270)
+
+![image](https://github.com/user-attachments/assets/646b790b-5566-4fa7-a0f9-25da3ee4af23)
+
+<h2>${\color{Blue}Source code analysis}$</h2>
+<h3><b>Persistent Session: </b></h3>
+Here, we can see that a function is set so that user is logged out if cookie header 'persistentSession' is not found.  
+
+![image](https://github.com/user-attachments/assets/f05266eb-1d71-4fc1-8b6f-4a2ed1351322)
+
+![image](https://github.com/user-attachments/assets/6978ecca-90b7-4b97-a795-1e0c05c60e72)
+
+To achieve a persistent session, I'll change cookie header 'persistentSession' to yes. 
+
+![image](https://github.com/user-attachments/assets/0fec1920-dbf8-4e84-a47d-327c505b223d)
+
+Unfortunately, I get logged out after some time. I've tried other values but couldn't the session so I'll skip that for now. 
+
+<h3><b> Command execution authorization </b></h3>
+![image](https://github.com/user-attachments/assets/febfe145-6df5-4dc6-b218-dbc1fcc08f0b)
+
+The function (1)sends a POST request to <b>execute_command.php</b>, with (2)<b>Command</b> parameter contains the command to be executed in JSON format, and (3)an authorization header <b>'Authorization': 'Bearer ' + jwtToken</b>
+
+![image](https://github.com/user-attachments/assets/64c06dd4-955a-4923-824b-1b056aec503f)
+
+
+<h2><b>RCE</b></h2>
+Using a JWT token debugger, I'll take a closer look at the structure of the token:
+
+![image](https://github.com/user-attachments/assets/0b6e84dd-b85f-4165-ae47-90e5440b05b6)
+
+The <b>kid</b> header seems to be the location of the signing key used by the server to verify the token. Onto the payload of the token, the <b>role</b> value is currently "user". I'll try to change its value to "admin" to execute addtional commands. 
+
+![image](https://github.com/user-attachments/assets/8f902bd9-e56a-4be4-9f37-7d1cc9d9b02c)
+
+I tried the 'ls' command however was unathorized due to an error related to signature verification. Perhaps, the key located at <b>/var/www/mykey.key</b> is for the tester user only.
+
+![image](https://github.com/user-attachments/assets/2e0503ba-10f3-48dc-9f37-37c00cf494d3)
+
+ I'll try the key I found earlier with the ls command, changing the location of <b>kid</b> header to "/var/www/html/188ade1.key". If the key location were "/var/www", we would have seen the keyfile "mykey.key" using the ls command. 
+
+![image](https://github.com/user-attachments/assets/0c6ed5df-7dcf-47e4-89f5-fc0ba5fccc5b)
+
+Adding the key value of <b>56058354efb3daa97ebab00fabd7a7d7</b> verifies the legitimacy of the new token. 
+
+![image](https://github.com/user-attachments/assets/d0485e5d-8741-4ba4-8a6b-d98e27d0e6d9)
+
+With the new token, I was able to freely execute command on the target.
+
+![image](https://github.com/user-attachments/assets/95d4fc2d-e288-4658-886a-9ba8adffeeba)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
