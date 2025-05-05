@@ -162,7 +162,9 @@ To achieve a persistent session, I'll change cookie header 'persistentSession' t
 
 ![image](https://github.com/user-attachments/assets/0fec1920-dbf8-4e84-a47d-327c505b223d)
 
-Unfortunately, I get logged out after some time. I've tried other values but couldn't the session so I'll skip that for now. 
+Unfortunately, I get logged out after some time. I've tried other values but couldn't keep the session so I'll skip that for now. 
+
+<i>Note: After reviewing the code, I realized that the value of the 'persistentSession' header doesn't matter as long as it can be retrieved by the function GetCookie(), and its lifetime's only 20 seconds. See [Bonus](#Bonus). </i>
 
 <h3><b> Command execution authorization </b></h3>
 
@@ -197,6 +199,13 @@ Adding the key value of <b>56058354efb3daa97ebab00fabd7a7d7</b> verifies the leg
 With the new token, I was able to freely execute command on the target.
 
 ![image](https://github.com/user-attachments/assets/95d4fc2d-e288-4658-886a-9ba8adffeeba)
+
+## Bonus:
+Upon reviewing the code of index.php, I found the function that set the "PersistentSession" cookie header.
+
+![image](https://github.com/user-attachments/assets/3cfd5655-4022-4a71-bc7a-893ce0e4852a)
+
+The lifetime of the cookie only lasts 20 seconds, so we always logged out even if we changed its value. 
 
 
 
