@@ -144,9 +144,11 @@ Once the correct token is submitted, I resetted the password and successfully lo
 <b>Command execution</b>
 The page allows me to execute OS commands, which could be used for RCE. However, only 'ls' command is allowed, but not other OS comamnds and I was always logged out after an interval. I found a keyfile, but not sure what it does exactly.
 
-![image](https://github.com/user-attachments/assets/84111038-4d84-4d21-afea-c75e2030b270)
+<img width="788" alt="image" src="https://github.com/user-attachments/assets/36bcf0c2-a51a-4ea3-a31a-7199b252544e" />
 
-![image](https://github.com/user-attachments/assets/646b790b-5566-4fa7-a0f9-25da3ee4af23)
+
+<img width="787" alt="image" src="https://github.com/user-attachments/assets/b73b09a7-a3cd-4ce9-a1f0-12b793a10972" />
+
 
 <h2>${\color{Blue}Source code analysis}$</h2>
 <h3><b>Persistent Session: </b></h3>
