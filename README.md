@@ -1,7 +1,7 @@
 ![image](https://github.com/user-attachments/assets/05fe257f-b4ab-4dde-986d-edb60916c432)
 
 # THM-Hammer
-Hammer is a medium rate challenge. I'll start with directory enumeration on a web server, where a legitimate username can be found. After that, I will bypass 2fa mechanisism that is required to reset the user's password. 
+Hammer is a medium rate challenge. I'll start with directory enumeration on a web server, where a legitimate username can be found. After that, I will bypass 2fa mechanisism that is required to reset the user's password. To achieve RCE, I crafted new JWT token for the admin user by modifying the header and payload of the current user's token. 
 
 <h2>${\color{Blue}Recon}$</h2>
 Nmap finds open ports: 
@@ -171,7 +171,7 @@ The function (1)sends a POST request to <b>execute_command.php</b>, with (2)<b>C
 
 
 <h2><b>RCE</b></h2>
-Using a JWT token debugger, I'll take a closer look at the structure of the token:
+Using a [JWT token debugger](https://token.dev), I'll take a closer look at the structure of the token:
 
 ![image](https://github.com/user-attachments/assets/0b6e84dd-b85f-4165-ae47-90e5440b05b6)
 
