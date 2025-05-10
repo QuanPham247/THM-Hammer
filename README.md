@@ -3,7 +3,8 @@
 # THM-Hammer
 Hammer is a medium rate challenge. I'll start with directory enumeration on a web server, where a legitimate username can be found. After that, I will bypass 2fa mechanisism that is required to reset the user's password. To achieve RCE, I crafted new JWT token for the admin user by modifying the header and payload of the current user's token. 
 
-$\color{Purple}\large{\textsf{Recon}}$
+<h2>Recon</h2>
+
 Nmap finds open ports: 
 
 ```
@@ -139,7 +140,7 @@ Once the correct token is submitted, I resetted the password and successfully lo
 
 ![image](https://github.com/user-attachments/assets/d9267f3d-1cf0-4056-a99b-5fbde3944a47)
 
-$\color{Purple}\large{\textsf{Enumeration of dashboard.php}}$
+<h2>Enumeration of dashboard.php</h2>
 
 <b>Command execution</b>
 The page allows me to execute OS commands, which could be used for RCE. However, only 'ls' command is allowed, but not other OS comamnds and I was always logged out after an interval. I found a keyfile, but not sure what it does exactly.
@@ -151,7 +152,7 @@ The page allows me to execute OS commands, which could be used for RCE. However,
 
 
 
-$\color{Purple}\large{\textsf{Source Code Analysis}}$
+<h2>Source Code Analysis</h2>
 
 <h3><b>Persistent Session: </b></h3>
 Viewing the page source, we can see that a function is set so that user is logged out if cookie header 'persistentSession' is not found.  
@@ -177,7 +178,7 @@ The function (1)sends a POST request to <b>execute_command.php</b>, with (2)<b>C
 ![image](https://github.com/user-attachments/assets/64c06dd4-955a-4923-824b-1b056aec503f)
 
 
-$\color{Purple}\large{\textsf{RCE}}$
+<h2>RCE</h2>
 Using a [JWT token debugger](https://token.dev), I'll take a closer look at the structure of the token:
 
 ![image](https://github.com/user-attachments/assets/0b6e84dd-b85f-4165-ae47-90e5440b05b6)
