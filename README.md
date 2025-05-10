@@ -4,6 +4,7 @@
 Hammer is a medium rate challenge. I'll start with directory enumeration on a web server, where a legitimate username can be found. After that, I will bypass 2fa mechanisism that is required to reset the user's password. To achieve RCE, I crafted new JWT token for the admin user by modifying the header and payload of the current user's token. 
 
 $\color{Purple}\large{\textsf{Recon}}$
+
 Nmap finds open ports: 
 
 ```
