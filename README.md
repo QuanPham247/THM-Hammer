@@ -150,9 +150,11 @@ The page allows me to execute OS commands, which could be used for RCE. However,
 <img width="787" alt="image" src="https://github.com/user-attachments/assets/b73b09a7-a3cd-4ce9-a1f0-12b793a10972" />
 
 
+
 $\color{Purple}\large{\textsf{Source Code Analysis}}$
+
 <h3><b>Persistent Session: </b></h3>
-Here, we can see that a function is set so that user is logged out if cookie header 'persistentSession' is not found.  
+Viewing the page source, we can see that a function is set so that user is logged out if cookie header 'persistentSession' is not found.  
 
 ![image](https://github.com/user-attachments/assets/f05266eb-1d71-4fc1-8b6f-4a2ed1351322)
 
